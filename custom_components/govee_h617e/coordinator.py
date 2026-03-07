@@ -56,6 +56,15 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
             update_interval=polling_interval,
         )
 
+    def _scale_rgb_for_brightness(self, rgb: tuple[int, int, int]) -> tuple[int, int, int]:
+        """Apply global brightness to an RGB color before sending to device."""
+        factor = max(0.0, min(1.0, self.state.brightness / 255))
+        return (
+            max(0, min(255, round(rgb[0] * factor))),
+            max(0, min(255, round(rgb[1] * factor))),
+            max(0, min(255, round(rgb[2] * factor))),
+        )
+
     async def _async_update_data(self) -> H617EState:
         try:
             await self.ble_client.async_ping()
@@ -84,12 +93,24 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
         await self.async_request_refresh()
 
     async def async_set_brightness(self, brightness: int) -> None:
-        await self.ble_client.async_write(brightness_packet(brightness))
-        self.state.brightness = brightness
+        self.state.brightness = max(0, min(255, brightness))
+
+        # Native brightness command (kept as best-effort).
+        await self.ble_client.async_write(brightness_packet(self.state.brightness))
+
+        # Fallback: many RGBIC firmware variants ignore global brightness in
+        # segment mode, so re-send scaled colors explicitly.
+        if self.state.is_on:
+            await self.ble_client.async_write(rgb_packet(*self._scale_rgb_for_brightness(self.state.rgb_color)))
+            if self.experimental_segments:
+                for idx, color in self.state.segment_colors.items():
+                    await self.ble_client.async_write(
+                        experimental_segment_packet(idx, *self._scale_rgb_for_brightness(color))
+                    )
         await self.async_request_refresh()
 
     async def async_set_rgb(self, rgb: tuple[int, int, int]) -> None:
-        await self.ble_client.async_write(rgb_packet(*rgb))
+        await self.ble_client.async_write(rgb_packet(*self._scale_rgb_for_brightness(rgb)))
         self.state.rgb_color = rgb
         self.state.effect = None
         await self.async_request_refresh()
@@ -112,7 +133,9 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
             self.state.segment_last_colors[index] = rgb
 
         # Experimental: this packet format is not fully validated for all H617E firmware versions.
-        await self.ble_client.async_write(experimental_segment_packet(index, *rgb))
+        await self.ble_client.async_write(
+            experimental_segment_packet(index, *self._scale_rgb_for_brightness(rgb))
+        )
         # Some RGBIC firmware revisions change effective brightness after a
         # segment packet; immediately re-apply configured brightness.
         if self.state.is_on:
