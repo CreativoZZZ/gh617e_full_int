@@ -70,6 +70,11 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
         await self.ble_client.async_write(power_packet(on))
         self.state.is_on = on
 
+        # Force full brightness on every power-on so startup is not dim.
+        if on:
+            await self.ble_client.async_write(brightness_packet(255))
+            self.state.brightness = 255
+
         # When turning on, restore segment colors if experimental support enabled
         if on and self.experimental_segments:
             # send each segment a color; only non-black colors are meaningful

@@ -84,3 +84,17 @@ async def test_set_segment_color_out_of_range_raises(hass) -> None:
     coordinator = GoveeH617ECoordinator(hass, client, timedelta(seconds=30), OPTIMISTIC_PARTIAL, True, segment_count=3)
     with pytest.raises(ValueError):
         await coordinator.async_set_segment_color(3, (10, 20, 30))
+
+
+@pytest.mark.asyncio
+async def test_power_on_forces_full_brightness(hass) -> None:
+    client = FakeBleClient()
+    coordinator = GoveeH617ECoordinator(hass, client, timedelta(seconds=30), OPTIMISTIC_PARTIAL, True)
+    await coordinator.async_set_power(True)
+
+    # First packet is power on
+    assert client.payloads[0][1] == 0x01
+    # Second packet is brightness and should be max (0xFE on Govee scale)
+    assert client.payloads[1][1] == 0x04
+    assert client.payloads[1][2] == 0xFE
+    assert coordinator.state.brightness == 255

@@ -134,8 +134,8 @@ class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEnti
 
     @property
     def brightness(self) -> int | None:
-        # Segments don't have independent brightness control
-        return None
+        # Brightness is global on the strip; expose it consistently on segments.
+        return self.coordinator.state.brightness
 
     @property
     def rgb_color(self) -> tuple[int, int, int] | None:
@@ -149,6 +149,9 @@ class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEnti
         # First ensure main light is on
         if not self.coordinator.state.is_on:
             await self.coordinator.async_set_power(True)
+
+        if ATTR_BRIGHTNESS in kwargs:
+            await self.coordinator.async_set_brightness(kwargs[ATTR_BRIGHTNESS])
         
         # Determine color to set
         if ATTR_RGB_COLOR in kwargs:
