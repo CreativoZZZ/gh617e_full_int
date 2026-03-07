@@ -1,0 +1,98 @@
+# Govee H617E Segment Control Dashboard
+# 
+# This dashboard template provides a user-friendly UI for controlling individual segments
+# of the H617E RGBIC light strip (15 segments total).
+#
+# Installation:
+# 1. Copy this content into Home Assistant -> Settings -> Dashboards -> Create new dashboard
+# 2. Replace "light.govee_h617e_segment_0" with your actual entity IDs
+# 3. Customize colors, grouping, and layout as needed
+
+title: H617E Segment Control
+panels:
+  panel-1:
+    cards:
+      - type: heading
+        heading: H617E RGBIC Control
+        heading_level: 1
+      
+      - type: grid
+        cards:
+          # Main light control
+          - type: light
+            entity: light.govee_h617e
+            name: Main Light
+          
+          # Section divider
+          - type: heading
+            heading: Segment Colors (1-5)
+            heading_level: 3
+        columns: 2
+      
+      - type: grid
+        cards:
+          # Segments 0-4
+          - type: light
+            entity: light.govee_h617e_segment_0
+            name: Segment 1
+          - type: light
+            entity: light.govee_h617e_segment_1
+            name: Segment 2
+          - type: light
+            entity: light.govee_h617e_segment_2
+            name: Segment 3
+          - type: light
+            entity: light.govee_h617e_segment_3
+            name: Segment 4
+          - type: light
+            entity: light.govee_h617e_segment_4
+            name: Segment 5
+        columns: 5
+      
+      - type: heading
+        heading: Segment Colors (6-10)
+        heading_level: 3
+      
+      - type: grid
+        cards:
+          # Segments 5-9
+          - type: light
+            entity: light.govee_h617e_segment_5
+            name: Segment 6
+          - type: light
+            entity: light.govee_h617e_segment_6
+            name: Segment 7
+          - type: light
+            entity: light.govee_h617e_segment_7
+            name: Segment 8
+          - type: light
+            entity: light.govee_h617e_segment_8
+            name: Segment 9
+          - type: light
+            entity: light.govee_h617e_segment_9
+            name: Segment 10
+        columns: 5
+      
+      - type: heading
+        heading: Segment Colors (11-15)
+        heading_level: 3
+      
+      - type: grid
+        cards:
+          # Segments 10-14
+          - type: light
+            entity: light.govee_h617e_segment_10
+            name: Segment 11
+          - type: light
+            entity: light.govee_h617e_segment_11
+            name: Segment 12
+          - type: light
+            entity: light.govee_h617e_segment_12
+            name: Segment 13
+          - type: light
+            entity: light.govee_h617e_segment_13
+            name: Segment 14
+          - type: light
+            entity: light.govee_h617e_segment_14
+            name: Segment 15
+        columns: 5

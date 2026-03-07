@@ -1,0 +1,334 @@
+###############################################################################
+# Govee H617E - Example Automations and Scripts for Segment Control
+#
+# These are example automations and scripts to demonstrate how to use the
+# segment control feature. Paste the relevant sections into your Home Assistant
+# automations.yaml or scripts.yaml file.
+###############################################################################
+
+# ============================================================================
+# AUTOMATIONS
+# ============================================================================
+
+automations:
+  # Example 1: Turn on with rainbow effect
+  - id: h617e_rainbow_on
+    alias: "H617E Rainbow Effect"
+    description: "Create a rainbow effect across all segments"
+    trigger:
+      platform: time
+      at: "19:00:00"
+    condition:
+      condition: state
+      entity_id: light.govee_h617e
+      state: "off"
+    action:
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.govee_h617e_segment_0
+            - light.govee_h617e_segment_5
+            - light.govee_h617e_segment_10
+        data:
+          rgb_color: [255, 0, 0]  # Red
+      - delay: "00:00:01"
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.govee_h617e_segment_1
+            - light.govee_h617e_segment_6
+            - light.govee_h617e_segment_11
+        data:
+          rgb_color: [255, 127, 0]  # Orange
+      - delay: "00:00:01"
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.govee_h617e_segment_2
+            - light.govee_h617e_segment_7
+            - light.govee_h617e_segment_12
+        data:
+          rgb_color: [255, 255, 0]  # Yellow
+      - delay: "00:00:01"
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.govee_h617e_segment_3
+            - light.govee_h617e_segment_8
+            - light.govee_h617e_segment_13
+        data:
+          rgb_color: [0, 255, 0]  # Green
+      - delay: "00:00:01"
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.govee_h617e_segment_4
+            - light.govee_h617e_segment_9
+            - light.govee_h617e_segment_14
+        data:
+          rgb_color: [0, 0, 255]  # Blue
+
+  # Example 2: Movie time - dim and set to blue
+  - id: h617e_movie_time
+    alias: "H617E Movie Mode"
+    description: "Set H617E to movie-friendly lighting"
+    trigger:
+      platform: state
+      entity_id: input_boolean.movie_mode
+      to: "on"
+    action:
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e
+        data:
+          brightness: 50
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.govee_h617e_segment_0
+            - light.govee_h617e_segment_1
+            - light.govee_h617e_segment_2
+            - light.govee_h617e_segment_3
+            - light.govee_h617e_segment_4
+            - light.govee_h617e_segment_5
+            - light.govee_h617e_segment_6
+            - light.govee_h617e_segment_7
+            - light.govee_h617e_segment_8
+            - light.govee_h617e_segment_9
+            - light.govee_h617e_segment_10
+            - light.govee_h617e_segment_11
+            - light.govee_h617e_segment_12
+            - light.govee_h617e_segment_13
+            - light.govee_h617e_segment_14
+        data:
+          rgb_color: [0, 0, 50]  # Dark blue
+
+  # Example 3: Turn off when everyone leaves
+  - id: h617e_away_off
+    alias: "H617E Away Mode Off"
+    description: "Turn off H617E when everyone leaves"
+    trigger:
+      platform: state
+      entity_id: group.all_people
+      to: "not_home"
+    action:
+      - service: light.turn_off
+        target:
+          entity_id: light.govee_h617e
+
+
+# ============================================================================
+# SCRIPTS
+# ============================================================================
+
+scripts:
+  # Script 1: Set all segments to a single color
+  set_all_segments_color:
+    description: "Set all 15 segments to the same color"
+    fields:
+      rgb_color:
+        description: "RGB color as [R, G, B]"
+        example: "[255, 0, 0]"
+    sequence:
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.govee_h617e_segment_0
+            - light.govee_h617e_segment_1
+            - light.govee_h617e_segment_2
+            - light.govee_h617e_segment_3
+            - light.govee_h617e_segment_4
+            - light.govee_h617e_segment_5
+            - light.govee_h617e_segment_6
+            - light.govee_h617e_segment_7
+            - light.govee_h617e_segment_8
+            - light.govee_h617e_segment_9
+            - light.govee_h617e_segment_10
+            - light.govee_h617e_segment_11
+            - light.govee_h617e_segment_12
+            - light.govee_h617e_segment_13
+            - light.govee_h617e_segment_14
+        data:
+          rgb_color: "{{ rgb_color }}"
+
+  # Script 2: Create a gradient from red to blue
+  gradient_red_to_blue:
+    description: "Create a red-to-blue gradient across all segments"
+    sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_0
+        data:
+          rgb_color: [255, 0, 0]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_1
+        data:
+          rgb_color: [238, 0, 17]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_2
+        data:
+          rgb_color: [221, 0, 34]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_3
+        data:
+          rgb_color: [204, 0, 51]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_4
+        data:
+          rgb_color: [187, 0, 68]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_5
+        data:
+          rgb_color: [170, 0, 85]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_6
+        data:
+          rgb_color: [153, 0, 102]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_7
+        data:
+          rgb_color: [136, 0, 119]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_8
+        data:
+          rgb_color: [119, 0, 136]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_9
+        data:
+          rgb_color: [102, 0, 153]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_10
+        data:
+          rgb_color: [85, 0, 170]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_11
+        data:
+          rgb_color: [68, 0, 187]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_12
+        data:
+          rgb_color: [51, 0, 204]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_13
+        data:
+          rgb_color: [34, 0, 221]
+      - service: light.turn_on
+        target:
+          entity_id: light.govee_h617e_segment_14
+        data:
+          rgb_color: [0, 0, 255]
+
+  # Script 3: Alternating colors (checkerboard)
+  checkerboard_pattern:
+    description: "Create a checkerboard color pattern"
+    fields:
+      color1:
+        description: "First color [R, G, B]"
+        example: "[255, 0, 0]"
+      color2:
+        description: "Second color [R, G, B]"
+        example: "[0, 0, 255]"
+    sequence:
+      # Odd segments with color1
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.govee_h617e_segment_0
+            - light.govee_h617e_segment_2
+            - light.govee_h617e_segment_4
+            - light.govee_h617e_segment_6
+            - light.govee_h617e_segment_8
+            - light.govee_h617e_segment_10
+            - light.govee_h617e_segment_12
+            - light.govee_h617e_segment_14
+        data:
+          rgb_color: "{{ color1 }}"
+      # Even segments with color2
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.govee_h617e_segment_1
+            - light.govee_h617e_segment_3
+            - light.govee_h617e_segment_5
+            - light.govee_h617e_segment_7
+            - light.govee_h617e_segment_9
+            - light.govee_h617e_segment_11
+            - light.govee_h617e_segment_13
+        data:
+          rgb_color: "{{ color2 }}"
+
+  # Script 4: Police/Emergency light effect
+  police_effect:
+    description: "Create a police light effect"
+    sequence:
+      - repeat:
+          count: 5
+          sequence:
+            - service: light.turn_on
+              target:
+                entity_id:
+                  - light.govee_h617e_segment_0
+                  - light.govee_h617e_segment_1
+                  - light.govee_h617e_segment_2
+                  - light.govee_h617e_segment_3
+                  - light.govee_h617e_segment_4
+              data:
+                rgb_color: [255, 0, 0]  # Red
+            - service: light.turn_on
+              target:
+                entity_id:
+                  - light.govee_h617e_segment_5
+                  - light.govee_h617e_segment_6
+                  - light.govee_h617e_segment_7
+                  - light.govee_h617e_segment_8
+                  - light.govee_h617e_segment_9
+                  - light.govee_h617e_segment_10
+                  - light.govee_h617e_segment_11
+                  - light.govee_h617e_segment_12
+                  - light.govee_h617e_segment_13
+                  - light.govee_h617e_segment_14
+              data:
+                rgb_color: [0, 0, 255]  # Blue
+            - delay: "00:00:00.5"
+            - service: light.turn_on
+              target:
+                entity_id:
+                  - light.govee_h617e_segment_0
+                  - light.govee_h617e_segment_1
+                  - light.govee_h617e_segment_2
+                  - light.govee_h617e_segment_3
+                  - light.govee_h617e_segment_4
+              data:
+                rgb_color: [0, 0, 255]  # Blue
+            - service: light.turn_on
+              target:
+                entity_id:
+                  - light.govee_h617e_segment_5
+                  - light.govee_h617e_segment_6
+                  - light.govee_h617e_segment_7
+                  - light.govee_h617e_segment_8
+                  - light.govee_h617e_segment_9
+                  - light.govee_h617e_segment_10
+                  - light.govee_h617e_segment_11
+                  - light.govee_h617e_segment_12
+                  - light.govee_h617e_segment_13
+                  - light.govee_h617e_segment_14
+              data:
+                rgb_color: [255, 0, 0]  # Red
+            - delay: "00:00:00.5"

@@ -35,7 +35,14 @@ def _load_scenes() -> dict[str, str]:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> None:
     coordinator: GoveeH617ECoordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
-    async_add_entities([GoveeH617ELight(coordinator, entry.entry_id, _load_scenes())])
+    entities = [GoveeH617ELight(coordinator, entry.entry_id, _load_scenes())]
+    
+    # Add segment entities if experimentalSegments is enabled
+    if coordinator.experimental_segments:
+        for segment_index in range(15):
+            entities.append(GoveeH617ESegmentLight(coordinator, entry.entry_id, segment_index))
+    
+    async_add_entities(entities)
 
 
 class GoveeH617ELight(CoordinatorEntity[GoveeH617ECoordinator], LightEntity):
@@ -89,3 +96,48 @@ class GoveeH617ELight(CoordinatorEntity[GoveeH617ECoordinator], LightEntity):
 
     async def async_turn_off(self, **kwargs) -> None:
         await self.coordinator.async_set_power(False)
+
+
+class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEntity):
+    """Light entity for controlling individual H617E segments."""
+    
+    _attr_has_entity_name = True
+    _attr_supported_color_modes = {ColorMode.RGB}
+
+    def __init__(self, coordinator: GoveeH617ECoordinator, entry_id: str, segment_index: int) -> None:
+        super().__init__(coordinator)
+        self._segment_index = segment_index
+        self._attr_unique_id = f"{entry_id}_segment_{segment_index}"
+        self._attr_name = f"Segment {segment_index + 1}"
+
+    @property
+    def available(self) -> bool:
+        return self.coordinator.state.available and self.coordinator.experimental_segments
+
+    @property
+    def is_on(self) -> bool:
+        # Show segment as on if the main light is on
+        return self.coordinator.state.is_on
+
+    @property
+    def brightness(self) -> int | None:
+        # Segments don't have independent brightness control in the current implementation
+        return None
+
+    @property
+    def rgb_color(self) -> tuple[int, int, int] | None:
+        return self.coordinator.state.segment_colors.get(self._segment_index)
+
+    async def async_turn_on(self, **kwargs) -> None:
+        # Ensure main light is on
+        if not self.coordinator.state.is_on:
+            await self.coordinator.async_set_power(True)
+        
+        # Set segment color if provided
+        if ATTR_RGB_COLOR in kwargs:
+            await self.coordinator.async_set_segment_color(self._segment_index, kwargs[ATTR_RGB_COLOR])
+
+    async def async_turn_off(self, **kwargs) -> None:
+        # Turning off a segment turns off the entire light
+        await self.coordinator.async_set_power(False)
+

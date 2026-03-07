@@ -1,0 +1,96 @@
+# Advanced Lovelace Card Configuration
+# This is a more sophisticated dashboard using markdown-based segment visualization
+
+type: vertical-stack
+cards:
+  - type: heading
+    heading: 🎨 H617E RGBIC Advanced Control Panel
+  
+  - type: custom:button-card
+    entity: light.govee_h617e
+    name: Main Strip Control
+    show_state: true
+    show_label: true
+    label: |
+      [[[
+        return states['light.govee_h617e'].state === 'on' ?
+          `On - ${states['light.govee_h617e'].attributes.brightness}% brightness` :
+          'Off'
+      ]]]
+    state:
+      - value: 'on'
+        color: '#00FF00'
+      - value: 'off'
+        color: '#FF0000'
+
+  - type: horizontal-stack
+    cards:
+      - type: light
+        entity: light.govee_h617e_segment_0
+        name: "1"
+      - type: light
+        entity: light.govee_h617e_segment_1
+        name: "2"
+      - type: light
+        entity: light.govee_h617e_segment_2
+        name: "3"
+      - type: light
+        entity: light.govee_h617e_segment_3
+        name: "4"
+      - type: light
+        entity: light.govee_h617e_segment_4
+        name: "5"
+
+  - type: horizontal-stack
+    cards:
+      - type: light
+        entity: light.govee_h617e_segment_5
+        name: "6"
+      - type: light
+        entity: light.govee_h617e_segment_6
+        name: "7"
+      - type: light
+        entity: light.govee_h617e_segment_7
+        name: "8"
+      - type: light
+        entity: light.govee_h617e_segment_8
+        name: "9"
+      - type: light
+        entity: light.govee_h617e_segment_9
+        name: "10"
+
+  - type: horizontal-stack
+    cards:
+      - type: light
+        entity: light.govee_h617e_segment_10
+        name: "11"
+      - type: light
+        entity: light.govee_h617e_segment_11
+        name: "12"
+      - type: light
+        entity: light.govee_h617e_segment_12
+        name: "13"
+      - type: light
+        entity: light.govee_h617e_segment_13
+        name: "14"
+      - type: light
+        entity: light.govee_h617e_segment_14
+        name: "15"
+
+  - type: markdown
+    content: |
+      ## Quick Actions
+      
+      Click on any segment above to change its color individually.
+      
+      **Tips:**
+      - All segments follow the main light's on/off state
+      - Use automations to create complex lighting scenes
+      - Combine colors to create gradients or patterns
+
+  - type: button-card
+    entity: light.govee_h617e
+    icon: mdi:lightbulb
+    name: Toggle Main Light
+    tap_action:
+      action: toggle
