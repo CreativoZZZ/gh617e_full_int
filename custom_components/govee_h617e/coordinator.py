@@ -70,21 +70,13 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
         await self.ble_client.async_write(power_packet(on))
         self.state.is_on = on
 
-        # When turning on, restore segment colors if experimental support enabled
-        if on and self.experimental_segments:
-            # send each segment a color; only non-black colors are meaningful
-            for idx, color in self.state.segment_last_colors.items():
-                if color != (0, 0, 0):
-                    # we intentionally do not await multiple writes in parallel
-                    await self.ble_client.async_write(experimental_segment_packet(idx, *color))
-            # also reflect the restored colors in the internal map
-            for idx, color in self.state.segment_last_colors.items():
-                if color != (0, 0, 0):
-                    self.state.segment_colors[idx] = color
+        # Do not auto-restore segment colors on power-on.
+        # Segment frames can interfere with global brightness on some firmware
+        # variants; explicit segment writes remain available per entity/service.
+        if not on:
+            self.state.segment_colors.clear()
 
         # Force full brightness on every power-on so startup is not dim.
-        # This must run after segment restoration because segment writes can
-        # implicitly alter brightness on some firmware variants.
         if on:
             self.state.brightness = 255
             await self.ble_client.async_write(brightness_packet(self.state.brightness))

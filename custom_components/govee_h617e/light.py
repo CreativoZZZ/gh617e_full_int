@@ -70,6 +70,10 @@ class GoveeH617ELight(CoordinatorEntity[GoveeH617ECoordinator], LightEntity):
         return self.coordinator.state.brightness
 
     @property
+    def color_mode(self) -> ColorMode:
+        return ColorMode.RGB
+
+    @property
     def rgb_color(self) -> tuple[int, int, int]:
         return self.coordinator.state.rgb_color
 
@@ -117,17 +121,21 @@ class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEnti
 
     @property
     def is_on(self) -> bool:
-        # Segment is on if main light is on AND segment has a color (not black)
+        # If main light is off, segments are effectively off.
         if not self.coordinator.state.is_on:
             return False
-        
+
         color = self.coordinator.state.segment_colors.get(self._segment_index)
-        # If no color set, it's considered off
+        # If a segment was never explicitly set, treat it as on with main state.
         if color is None:
-            return False
-        
-        # Segment is on if color is not black (0,0,0)
+            return True
+
+        # Segment is off only when explicitly black.
         return color != (0, 0, 0)
+
+    @property
+    def color_mode(self) -> ColorMode:
+        return ColorMode.RGB
 
     @property
     def brightness(self) -> int | None:
@@ -136,9 +144,11 @@ class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEnti
 
     @property
     def rgb_color(self) -> tuple[int, int, int] | None:
-        # Return the segment color, or None if it's black or not set
+        # If no explicit segment color exists, mirror main light color.
         color = self.coordinator.state.segment_colors.get(self._segment_index)
-        if color is None or color == (0, 0, 0):
+        if color is None:
+            return self.coordinator.state.rgb_color
+        if color == (0, 0, 0):
             return None
         return color
 
