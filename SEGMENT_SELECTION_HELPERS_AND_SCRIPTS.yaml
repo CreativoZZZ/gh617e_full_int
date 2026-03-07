@@ -1,0 +1,141 @@
+input_boolean:
+  govee_h617e_seg_1_selected: { name: Govee Seg 1 selected }
+  govee_h617e_seg_2_selected: { name: Govee Seg 2 selected }
+  govee_h617e_seg_3_selected: { name: Govee Seg 3 selected }
+  govee_h617e_seg_4_selected: { name: Govee Seg 4 selected }
+  govee_h617e_seg_5_selected: { name: Govee Seg 5 selected }
+  govee_h617e_seg_6_selected: { name: Govee Seg 6 selected }
+  govee_h617e_seg_7_selected: { name: Govee Seg 7 selected }
+  govee_h617e_seg_8_selected: { name: Govee Seg 8 selected }
+  govee_h617e_seg_9_selected: { name: Govee Seg 9 selected }
+  govee_h617e_seg_10_selected: { name: Govee Seg 10 selected }
+  govee_h617e_seg_11_selected: { name: Govee Seg 11 selected }
+  govee_h617e_seg_12_selected: { name: Govee Seg 12 selected }
+  govee_h617e_seg_13_selected: { name: Govee Seg 13 selected }
+  govee_h617e_seg_14_selected: { name: Govee Seg 14 selected }
+  govee_h617e_seg_15_selected: { name: Govee Seg 15 selected }
+
+script:
+  govee_selected_on:
+    alias: Govee - Selected Segments ON
+    sequence:
+      - variables:
+          selected: >
+            {% set ns = namespace(ids=[]) %}
+            {% for i in range(1,16) %}
+              {% if is_state('input_boolean.govee_h617e_seg_' ~ i ~ '_selected','on') %}
+                {% set ns.ids = ns.ids + [i] %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.ids }}
+      - repeat:
+          for_each: "{{ selected }}"
+          sequence:
+            - service: light.turn_on
+              target:
+                entity_id: "{{ 'light.govee_h617e_segment_' ~ repeat.item }}"
+
+  govee_selected_off:
+    alias: Govee - Selected Segments OFF
+    sequence:
+      - variables:
+          selected: >
+            {% set ns = namespace(ids=[]) %}
+            {% for i in range(1,16) %}
+              {% if is_state('input_boolean.govee_h617e_seg_' ~ i ~ '_selected','on') %}
+                {% set ns.ids = ns.ids + [i] %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.ids }}
+      - repeat:
+          for_each: "{{ selected }}"
+          sequence:
+            - service: light.turn_off
+              target:
+                entity_id: "{{ 'light.govee_h617e_segment_' ~ repeat.item }}"
+
+  govee_selected_apply_from_main:
+    alias: Govee - Apply Main Color/Brightness To Selected
+    sequence:
+      - variables:
+          selected: >
+            {% set ns = namespace(ids=[]) %}
+            {% for i in range(1,16) %}
+              {% if is_state('input_boolean.govee_h617e_seg_' ~ i ~ '_selected','on') %}
+                {% set ns.ids = ns.ids + [i] %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.ids }}
+          rgb: "{{ state_attr('light.govee_h617e','rgb_color') or [255,255,255] }}"
+          bri: "{{ state_attr('light.govee_h617e','brightness') or 255 }}"
+      - repeat:
+          for_each: "{{ selected }}"
+          sequence:
+            - service: light.turn_on
+              target:
+                entity_id: "{{ 'light.govee_h617e_segment_' ~ repeat.item }}"
+              data:
+                rgb_color: "{{ rgb }}"
+                brightness: "{{ bri }}"
+
+  govee_selected_set_color:
+    alias: Govee - Set Color/Brightness For Selected
+    fields:
+      red:
+        name: Rot
+        selector:
+          number:
+            min: 0
+            max: 255
+            step: 1
+            mode: slider
+      green:
+        name: Gruen
+        selector:
+          number:
+            min: 0
+            max: 255
+            step: 1
+            mode: slider
+      blue:
+        name: Blau
+        selector:
+          number:
+            min: 0
+            max: 255
+            step: 1
+            mode: slider
+      brightness:
+        name: Helligkeit
+        selector:
+          number:
+            min: 1
+            max: 255
+            step: 1
+            mode: slider
+    sequence:
+      - variables:
+          selected: >
+            {% set ns = namespace(ids=[]) %}
+            {% for i in range(1,16) %}
+              {% if is_state('input_boolean.govee_h617e_seg_' ~ i ~ '_selected','on') %}
+                {% set ns.ids = ns.ids + [i] %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.ids }}
+          r: "{{ red | default(255) | int }}"
+          g: "{{ green | default(255) | int }}"
+          b: "{{ blue | default(255) | int }}"
+          bri: "{{ brightness | default(255) | int }}"
+      - repeat:
+          for_each: "{{ selected }}"
+          sequence:
+            - service: light.turn_on
+              target:
+                entity_id: "{{ 'light.govee_h617e_segment_' ~ repeat.item }}"
+              data:
+                rgb_color:
+                  - "{{ r }}"
+                  - "{{ g }}"
+                  - "{{ b }}"
+                brightness: "{{ bri }}"
