@@ -116,8 +116,12 @@ class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEnti
 
     @property
     def is_on(self) -> bool:
-        # Show segment as on if the main light is on
-        return self.coordinator.state.is_on
+        # Segment is "on" if it has a non-black color
+        color = self.coordinator.state.segment_colors.get(self._segment_index)
+        if color is None:
+            return False
+        # Check if color is not black (0,0,0)
+        return color != (0, 0, 0)
 
     @property
     def brightness(self) -> int | None:
@@ -126,18 +130,26 @@ class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEnti
 
     @property
     def rgb_color(self) -> tuple[int, int, int] | None:
-        return self.coordinator.state.segment_colors.get(self._segment_index)
+        color = self.coordinator.state.segment_colors.get(self._segment_index)
+        # Return None if segment is "off" (black)
+        if color == (0, 0, 0):
+            return None
+        return color
 
     async def async_turn_on(self, **kwargs) -> None:
         # Ensure main light is on
         if not self.coordinator.state.is_on:
             await self.coordinator.async_set_power(True)
         
-        # Set segment color if provided
-        if ATTR_RGB_COLOR in kwargs:
+        # If no color provided, set to white (default on)
+        if ATTR_RGB_COLOR not in kwargs:
+            await self.coordinator.async_set_segment_color(self._segment_index, (255, 255, 255))
+        else:
+            # Set segment color if provided
             await self.coordinator.async_set_segment_color(self._segment_index, kwargs[ATTR_RGB_COLOR])
 
     async def async_turn_off(self, **kwargs) -> None:
-        # Turning off a segment turns off the entire light
-        await self.coordinator.async_set_power(False)
+        # Set segment to black (off) instead of turning off entire light
+        # This way individual segments can be turned off independently
+        await self.coordinator.async_set_segment_color(self._segment_index, (0, 0, 0))
 
