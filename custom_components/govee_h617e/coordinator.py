@@ -9,7 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .ble.client import GoveeBleClient
-from .ble.protocol import brightness_packet, experimental_segment_packet, power_packet, rgb_packet
+from .ble.protocol import experimental_segment_packet, power_packet, rgb_packet
 from .const import OPTIMISTIC_PARTIAL
 
 _LOGGER = logging.getLogger(__name__)
@@ -88,18 +88,16 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
         # Force full brightness on every power-on so startup is not dim.
         if on:
             self.state.brightness = 255
-            await self.ble_client.async_write(brightness_packet(self.state.brightness))
 
         await self.async_request_refresh()
 
     async def async_set_brightness(self, brightness: int) -> None:
         self.state.brightness = max(0, min(255, brightness))
 
-        # Native brightness command (kept as best-effort).
-        await self.ble_client.async_write(brightness_packet(self.state.brightness))
-
-        # Fallback: many RGBIC firmware variants ignore global brightness in
-        # segment mode, so re-send scaled colors explicitly.
+        # Apply brightness by re-sending scaled colors.
+        # Native brightness frames are intentionally avoided because some RGBIC
+        # firmware revisions interpret them inconsistently and can force the
+        # strip into a persistently dim state.
         if self.state.is_on:
             await self.ble_client.async_write(rgb_packet(*self._scale_rgb_for_brightness(self.state.rgb_color)))
             if self.experimental_segments:
@@ -136,9 +134,5 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
         await self.ble_client.async_write(
             experimental_segment_packet(index, *self._scale_rgb_for_brightness(rgb))
         )
-        # Some RGBIC firmware revisions change effective brightness after a
-        # segment packet; immediately re-apply configured brightness.
-        if self.state.is_on:
-            await self.ble_client.async_write(brightness_packet(self.state.brightness))
         self.state.segment_colors[index] = rgb
         await self.async_request_refresh()
