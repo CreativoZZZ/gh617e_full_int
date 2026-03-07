@@ -116,12 +116,11 @@ class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEnti
 
     @property
     def is_on(self) -> bool:
-        # Segment is "on" if it has a non-black color
-        color = self.coordinator.state.segment_colors.get(self._segment_index)
-        if color is None:
+        # Segment is on if main light is on AND segment color is not black (0,0,0)
+        if not self.coordinator.state.is_on:
             return False
-        # Check if color is not black (0,0,0)
-        return color != (0, 0, 0)
+        color = self.coordinator.state.segment_colors.get(self._segment_index)
+        return color is not None and color != (0, 0, 0)
 
     @property
     def brightness(self) -> int | None:
@@ -131,7 +130,7 @@ class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEnti
     @property
     def rgb_color(self) -> tuple[int, int, int] | None:
         color = self.coordinator.state.segment_colors.get(self._segment_index)
-        # Return None if segment is "off" (black)
+        # Return None if segment is "off" (black) to show as off in UI
         if color == (0, 0, 0):
             return None
         return color
@@ -141,15 +140,27 @@ class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEnti
         if not self.coordinator.state.is_on:
             await self.coordinator.async_set_power(True)
         
-        # If no color provided, set to white (default on)
-        if ATTR_RGB_COLOR not in kwargs:
-            await self.coordinator.async_set_segment_color(self._segment_index, (255, 255, 255))
+        # Set segment color if provided by user
+        if ATTR_RGB_COLOR in kwargs:
+            color = kwargs[ATTR_RGB_COLOR]
+            # Save this as the last known color
+            self.coordinator.state.segment_last_colors[self._segment_index] = color
+            await self.coordinator.async_set_segment_color(self._segment_index, color)
         else:
-            # Set segment color if provided
-            await self.coordinator.async_set_segment_color(self._segment_index, kwargs[ATTR_RGB_COLOR])
+            # If no color provided, restore the last known color
+            # This preserves the color when turning back on
+            last_color = self.coordinator.state.segment_last_colors.get(
+                self._segment_index, (255, 255, 255)
+            )
+            await self.coordinator.async_set_segment_color(self._segment_index, last_color)
 
     async def async_turn_off(self, **kwargs) -> None:
-        # Set segment to black (off) instead of turning off entire light
-        # This way individual segments can be turned off independently
+        # Save current color before turning off
+        current_color = self.coordinator.state.segment_colors.get(self._segment_index)
+        if current_color and current_color != (0, 0, 0):
+            self.coordinator.state.segment_last_colors[self._segment_index] = current_color
+        
+        # Set segment to black (off) but keep main light on
+        # This allows independent segment control without turning off entire light
         await self.coordinator.async_set_segment_color(self._segment_index, (0, 0, 0))
 

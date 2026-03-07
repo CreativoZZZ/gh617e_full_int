@@ -26,6 +26,8 @@ class H617EState:
     available: bool = False
     confirmed_effect: str | None = None
     segment_colors: dict[int, tuple[int, int, int]] = field(default_factory=dict)
+    # Store the last non-black color for each segment (for restoring when turning on)
+    segment_last_colors: dict[int, tuple[int, int, int]] = field(default_factory=dict)
 
 
 class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
