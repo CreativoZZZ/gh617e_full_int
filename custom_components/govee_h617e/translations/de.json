@@ -1,0 +1,39 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Govee H617E (manuell)",
+        "description": "Gib die BLE-MAC-Adresse des H617E-Strips ein.",
+        "data": {
+          "mac": "BLE-MAC-Adresse",
+          "name": "Name"
+        }
+      },
+      "confirm": {
+        "title": "Gefundenes Gerät bestätigen",
+        "description": "Bluetooth-Gerät {name} hinzufügen?"
+      }
+    },
+    "error": {
+      "invalid_mac": "Ungültiges MAC-Format",
+      "not_supported": "Gerät ist kein unterstütztes Govee H617E"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Govee H617E Optionen",
+        "data": {
+          "preferred_address": "Bevorzugte BLE-Adresse",
+          "poll_interval": "Polling-Intervall (Sekunden)",
+          "connect_timeout": "Verbindungs-Timeout (Sekunden)",
+          "retry_count": "Wiederholungen bei BLE-Fehler",
+          "experimental_segments": "Experimentelle Segmentfunktionen aktivieren",
+          "segment_count_override": "Segmentanzahl überschreiben",
+          "debug_logging": "Debug-Logging aktivieren",
+          "optimistic_mode": "State-Modus"
+        }
+      }
+    }
+  }
+}
