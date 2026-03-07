@@ -28,8 +28,8 @@ def power_packet(on: bool) -> bytes:
 
 
 def brightness_packet(brightness: int) -> bytes:
-    """Map HA brightness (0..255) to govee scale (0..254)."""
-    scaled = max(0, min(254, round((brightness / 255) * 254)))
+    """Map HA brightness (0..255) to Govee BLE brightness scale (0..100)."""
+    scaled = max(0, min(100, round((brightness / 255) * 100)))
     return build_packet(0x04, [scaled])
 
 
