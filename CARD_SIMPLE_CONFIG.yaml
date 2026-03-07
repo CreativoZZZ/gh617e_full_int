@@ -1,0 +1,97 @@
+# 👇 COPY THIS EXACT CODE INTO A MANUAL CARD 👇
+# For: Dashboard → Create Card → Manual
+# This is a complete ready-to-use segment control card configuration
+
+type: vertical-stack
+cards:
+  - type: heading
+    heading: 🎨 H617E RGBIC Segment Control
+    heading_level: 1
+
+  # Main Light Control Section
+  - type: grid
+    columns: 1
+    cards:
+      - type: light
+        entity: light.govee_h617e
+        name: Main Light Strip
+
+  # Title for Segments 1-5
+  - type: heading
+    heading: Segments 1-5
+    heading_level: 3
+
+  # Segments 1-5
+  - type: horizontal-stack
+    cards:
+      - type: light
+        entity: light.govee_h617e_segment_0
+        name: "1️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_1
+        name: "2️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_2
+        name: "3️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_3
+        name: "4️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_4
+        name: "5️⃣"
+
+  # Title for Segments 6-10
+  - type: heading
+    heading: Segments 6-10
+    heading_level: 3
+
+  # Segments 6-10
+  - type: horizontal-stack
+    cards:
+      - type: light
+        entity: light.govee_h617e_segment_5
+        name: "6️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_6
+        name: "7️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_7
+        name: "8️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_8
+        name: "9️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_9
+        name: "🔟"
+
+  # Title for Segments 11-15
+  - type: heading
+    heading: Segments 11-15
+    heading_level: 3
+
+  # Segments 11-15
+  - type: horizontal-stack
+    cards:
+      - type: light
+        entity: light.govee_h617e_segment_10
+        name: "1️⃣1️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_11
+        name: "1️⃣2️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_12
+        name: "1️⃣3️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_13
+        name: "1️⃣4️⃣"
+      - type: light
+        entity: light.govee_h617e_segment_14
+        name: "1️⃣5️⃣"
+
+  # Helpful Info
+  - type: markdown
+    content: |
+      ### 💡 Tipps
+      - Klicken Sie auf ein Segment um die Farbe zu ändern
+      - Das Hauptlicht muss AN sein, damit die Segmente aktiv sind
+      - Alle Segmente folgen der Haupthelligkeit
