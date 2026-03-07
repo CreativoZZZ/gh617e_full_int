@@ -21,11 +21,14 @@ from .const import DOMAIN
 from .coordinator import GoveeH617ECoordinator
 
 
-def _load_scenes() -> dict[str, str]:
+def _load_scenes_sync() -> dict[str, str]:
     path = Path(__file__).parent / "scenes.json"
     if not path.exists():
         return {}
-    data = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
     scenes = {}
     for scene in data.get("scenes", []):
         if scene.get("name") and scene.get("packet"):
@@ -35,7 +38,8 @@ def _load_scenes() -> dict[str, str]:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> None:
     coordinator: GoveeH617ECoordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
-    entities = [GoveeH617ELight(coordinator, entry.entry_id, _load_scenes())]
+    scenes = await hass.async_add_executor_job(_load_scenes_sync)
+    entities = [GoveeH617ELight(coordinator, entry.entry_id, scenes)]
     
     # Create segment entities. Do not pre-seed segment_last_colors; otherwise
     # power-on triggers a burst of synthetic segment writes.
