@@ -63,8 +63,22 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
             raise UpdateFailed(str(err)) from err
 
     async def async_set_power(self, on: bool) -> None:
+        # Write the power packet first
         await self.ble_client.async_write(power_packet(on))
         self.state.is_on = on
+
+        # When turning on, restore segment colors if experimental support enabled
+        if on and self.experimental_segments:
+            # send each segment a color; only non-black colors are meaningful
+            for idx, color in self.state.segment_last_colors.items():
+                if color != (0, 0, 0):
+                    # we intentionally do not await multiple writes in parallel
+                    await self.ble_client.async_write(experimental_segment_packet(idx, *color))
+            # also reflect the restored colors in the internal map
+            for idx, color in self.state.segment_last_colors.items():
+                if color != (0, 0, 0):
+                    self.state.segment_colors[idx] = color
+
         await self.async_request_refresh()
 
     async def async_set_brightness(self, brightness: int) -> None:
@@ -88,6 +102,10 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
     async def async_set_segment_color(self, index: int, rgb: tuple[int, int, int]) -> None:
         if not self.experimental_segments:
             raise ValueError("Segment control disabled. Enable experimental segment features in options.")
+
+        # keep track of last non-black color for restore after power cycle
+        if rgb != (0, 0, 0):
+            self.state.segment_last_colors[index] = rgb
 
         # Experimental: this packet format is not fully validated for all H617E firmware versions.
         await self.ble_client.async_write(experimental_segment_packet(index, *rgb))

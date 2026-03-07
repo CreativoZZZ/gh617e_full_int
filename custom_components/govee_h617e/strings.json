@@ -31,7 +31,7 @@
           "experimental_segments": "Enable experimental segment features",
           "segment_count_override": "Segment count override",
           "debug_logging": "Enable debug logging",
-          "optimistic_mode": "State mode"
+          "optimistic_mode": "State reporting mode (auto/strict/partial)"
         }
       }
     }

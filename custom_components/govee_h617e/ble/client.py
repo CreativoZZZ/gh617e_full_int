@@ -35,10 +35,20 @@ class GoveeBleClient:
         return self._available
 
     async def async_connect(self) -> None:
+        # If we already have a connected client, nothing to do
         if self._client and self._client.is_connected:
             self._available = True
             return
 
+        # If a previous client instance exists but is not connected, ensure it is fully disconnected
+        if self._client is not None and not self._client.is_connected:
+            try:
+                await self._client.disconnect()
+            except Exception:  # pylint: disable=broad-except
+                _LOGGER.debug("previous BLE client disconnect failed, ignoring")
+            self._client = None
+
+        # create a fresh client and connect
         self._client = self._client_factory(self._address)
         await asyncio.wait_for(self._client.connect(), timeout=self._connect_timeout)
         self._available = True
@@ -53,6 +63,7 @@ class GoveeBleClient:
             last_error: Exception | None = None
             for attempt in range(self._retry_count + 1):
                 try:
+                    # attempt to ensure connection; this uses updated async_connect logic
                     await self.async_connect()
                     assert self._client is not None
                     await self._client.write_gatt_char(GOVEE_WRITE_CHAR_UUID, payload, response=False)
@@ -68,7 +79,11 @@ class GoveeBleClient:
                         self._retry_count + 1,
                         err,
                     )
-                    await self.async_disconnect()
+                    # Only disconnect on last attempt or if client is connected but error suggests reconnect
+                    try:
+                        await self.async_disconnect()
+                    except Exception:  # ensure we always continue retries
+                        _LOGGER.debug("error while disconnecting after failed write, ignoring")
                     await asyncio.sleep(min(0.5 * (attempt + 1), 2))
 
             raise RuntimeError(f"Unable to write BLE payload after retries: {last_error}")

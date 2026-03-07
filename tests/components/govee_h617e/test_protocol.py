@@ -28,3 +28,20 @@ def test_parse_hex_packet_length_validation() -> None:
         assert False
     except ValueError:
         assert True
+
+
+def test_experimental_segment_packet_format() -> None:
+    pkt = experimental_segment_packet(7, 1, 2, 3)
+    # ensure 20 bytes, first byte constant
+    assert len(pkt) == 20
+    assert pkt[0] == 0x33
+    # command 0x05 second byte
+    assert pkt[1] == 0x05
+    # payload prefix 0x15 in third byte
+    assert pkt[2] == 0x15
+    # segment index in fourth byte
+    assert pkt[3] == 7
+    # colors in subsequent bytes
+    assert pkt[4] == 1
+    assert pkt[5] == 2
+    assert pkt[6] == 3
