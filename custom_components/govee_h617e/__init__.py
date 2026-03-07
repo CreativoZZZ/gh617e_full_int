@@ -25,6 +25,7 @@ from .const import (
     CONF_OPTIMISTIC_MODE,
     CONF_POLL_INTERVAL,
     CONF_RETRY_COUNT,
+    CONF_SEGMENT_COUNT_OVERRIDE,
     DEFAULT_CONNECT_TIMEOUT,
     DEFAULT_OPTIMISTIC_MODE,
     DEFAULT_POLL_INTERVAL,
@@ -106,6 +107,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         polling_interval=timedelta(seconds=options.get(CONF_POLL_INTERVAL, int(DEFAULT_POLL_INTERVAL.total_seconds()))),
         optimistic_mode=options.get(CONF_OPTIMISTIC_MODE, DEFAULT_OPTIMISTIC_MODE),
         experimental_segments=options.get(CONF_EXPERIMENTAL_SEGMENTS, False),
+        segment_count=options.get(CONF_SEGMENT_COUNT_OVERRIDE, 0) or 15,
     )
 
     await coordinator.async_config_entry_first_refresh()

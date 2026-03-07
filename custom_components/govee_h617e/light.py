@@ -39,7 +39,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     
     # Initialize segment colors with default white when starting
     if coordinator.experimental_segments:
-        for segment_index in range(15):
+        for segment_index in range(coordinator.segment_count):
             # Initialize each segment with white color as default
             if segment_index not in coordinator.state.segment_colors:
                 coordinator.state.segment_colors[segment_index] = (255, 255, 255)
@@ -175,4 +175,3 @@ class GoveeH617ESegmentLight(CoordinatorEntity[GoveeH617ECoordinator], LightEnti
         
         # Set to black (off) without turning off main light
         await self.coordinator.async_set_segment_color(self._segment_index, (0, 0, 0))
-

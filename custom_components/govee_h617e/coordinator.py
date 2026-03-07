@@ -13,6 +13,7 @@ from .ble.protocol import brightness_packet, experimental_segment_packet, power_
 from .const import OPTIMISTIC_PARTIAL
 
 _LOGGER = logging.getLogger(__name__)
+DEFAULT_SEGMENT_COUNT = 15
 
 
 @dataclass
@@ -40,10 +41,12 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
         polling_interval: timedelta,
         optimistic_mode: str,
         experimental_segments: bool,
+        segment_count: int = DEFAULT_SEGMENT_COUNT,
     ) -> None:
         self.ble_client = ble_client
         self.optimistic_mode = optimistic_mode
         self.experimental_segments = experimental_segments
+        self.segment_count = max(1, min(56, segment_count))
         self.state = H617EState()
 
         super().__init__(
@@ -102,6 +105,8 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
     async def async_set_segment_color(self, index: int, rgb: tuple[int, int, int]) -> None:
         if not self.experimental_segments:
             raise ValueError("Segment control disabled. Enable experimental segment features in options.")
+        if index < 0 or index >= self.segment_count:
+            raise ValueError(f"segment index {index} out of range (0..{self.segment_count - 1})")
 
         # keep track of last non-black color for restore after power cycle
         if rgb != (0, 0, 0):

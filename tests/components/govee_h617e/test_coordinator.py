@@ -53,8 +53,9 @@ async def test_set_segment_color_sends_packet_and_stores(hass) -> None:
     # the second byte (command) should be 0x05, third byte payload[2] should equal 0x15
     assert client.payloads[0][1] == 0x05
     assert client.payloads[0][2] == 0x15
-    # index is at payload[3]
-    assert client.payloads[0][3] == 3
+    # static rgb selector in payload[3], segment mask starts at payload[12]
+    assert client.payloads[0][3] == 0x01
+    assert client.payloads[0][12] == 0x08
     assert coordinator.state.segment_colors[3] == (10, 20, 30)
     assert coordinator.state.segment_last_colors[3] == (10, 20, 30)
 
@@ -75,3 +76,11 @@ async def test_power_restores_segment_colors(hass) -> None:
     assert len(segment_packets) >= 2
     # state should reflect restored color
     assert coordinator.state.segment_colors[1] == (5, 6, 7)
+
+
+@pytest.mark.asyncio
+async def test_set_segment_color_out_of_range_raises(hass) -> None:
+    client = FakeBleClient()
+    coordinator = GoveeH617ECoordinator(hass, client, timedelta(seconds=30), OPTIMISTIC_PARTIAL, True, segment_count=3)
+    with pytest.raises(ValueError):
+        await coordinator.async_set_segment_color(3, (10, 20, 30))

@@ -47,7 +47,17 @@ def experimental_segment_packet(segment_index: int, red: int, green: int, blue: 
     NOTE: This packet format is intentionally marked experimental and must not be
     treated as protocol-guaranteed for all firmware revisions.
     """
-    return build_packet(0x05, [0x15, segment_index & 0xFF, red, green, blue])
+    if segment_index < 0:
+        raise ValueError("segment_index must be >= 0")
+
+    # RGBIC segment selection is encoded as a little-endian bitmask in the
+    # color payload (7 bytes => up to 56 addressable segments).
+    segment_mask = 1 << segment_index
+    if segment_mask >= (1 << 56):
+        raise ValueError("segment_index is out of range for RGBIC bitmask payload")
+
+    mask_bytes = list(segment_mask.to_bytes(7, byteorder="little"))
+    return build_packet(0x05, [0x15, 0x01, red, green, blue, 0, 0, 0, 0, 0, *mask_bytes])
 
 
 def parse_hex_packet(packet_hex: str) -> bytes:

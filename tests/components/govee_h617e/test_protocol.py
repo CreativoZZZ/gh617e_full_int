@@ -1,5 +1,6 @@
 from custom_components.govee_h617e.ble.protocol import (
     brightness_packet,
+    experimental_segment_packet,
     parse_hex_packet,
     power_packet,
     rgb_packet,
@@ -39,9 +40,12 @@ def test_experimental_segment_packet_format() -> None:
     assert pkt[1] == 0x05
     # payload prefix 0x15 in third byte
     assert pkt[2] == 0x15
-    # segment index in fourth byte
-    assert pkt[3] == 7
+    # static rgb command selector
+    assert pkt[3] == 0x01
     # colors in subsequent bytes
     assert pkt[4] == 1
     assert pkt[5] == 2
     assert pkt[6] == 3
+    # segment bitmask starts at byte 12, little-endian
+    assert pkt[12] == 0x80
+    assert pkt[13] == 0x00
