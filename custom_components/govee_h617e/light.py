@@ -37,13 +37,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     coordinator: GoveeH617ECoordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
     entities = [GoveeH617ELight(coordinator, entry.entry_id, _load_scenes())]
     
-    # Initialize segment colors with default white when starting
+    # Create segment entities. Do not pre-seed segment_last_colors; otherwise
+    # power-on triggers a burst of synthetic segment writes.
     if coordinator.experimental_segments:
         for segment_index in range(coordinator.segment_count):
-            # Initialize each segment with white color as default
-            if segment_index not in coordinator.state.segment_colors:
-                coordinator.state.segment_colors[segment_index] = (255, 255, 255)
-                coordinator.state.segment_last_colors[segment_index] = (255, 255, 255)
             entities.append(GoveeH617ESegmentLight(coordinator, entry.entry_id, segment_index))
     
     async_add_entities(entities)
