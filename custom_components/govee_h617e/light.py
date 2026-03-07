@@ -94,6 +94,9 @@ class GoveeH617ELight(CoordinatorEntity[GoveeH617ECoordinator], LightEntity):
             await self.coordinator.async_set_power(True)
         if ATTR_BRIGHTNESS in kwargs:
             await self.coordinator.async_set_brightness(kwargs[ATTR_BRIGHTNESS])
+        else:
+            # Default policy: turn on at full brightness unless explicitly set.
+            await self.coordinator.async_set_brightness(255)
         if ATTR_RGB_COLOR in kwargs:
             await self.coordinator.async_set_rgb(kwargs[ATTR_RGB_COLOR])
         if ATTR_EFFECT in kwargs:

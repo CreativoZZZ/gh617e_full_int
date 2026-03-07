@@ -88,6 +88,14 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
         # Force full brightness on every power-on so startup is not dim.
         if on:
             self.state.brightness = 255
+            await self.ble_client.async_write(
+                rgb_packet(*self._scale_rgb_for_brightness(self.state.rgb_color))
+            )
+            if self.experimental_segments:
+                for idx, color in self.state.segment_colors.items():
+                    await self.ble_client.async_write(
+                        experimental_segment_packet(idx, *self._scale_rgb_for_brightness(color))
+                    )
 
         await self.async_request_refresh()
 
