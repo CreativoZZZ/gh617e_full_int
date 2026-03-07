@@ -3,7 +3,8 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from collections.abc import Awaitable, Callable
+from collections.abc import Callable
+from typing import Any
 
 from bleak import BleakClient, BleakError
 
@@ -17,15 +18,17 @@ class GoveeBleClient:
 
     def __init__(
         self,
+        hass: Any,
         address: str,
         connect_timeout: float,
         retry_count: int,
-        client_factory: Callable[[str], BleakClient] | None = None,
+        client_factory: Callable[[Any], BleakClient] | None = None,
     ) -> None:
+        self._hass = hass
         self._address = address
         self._connect_timeout = connect_timeout
         self._retry_count = retry_count
-        self._client_factory = client_factory or (lambda addr: BleakClient(addr, timeout=connect_timeout))
+        self._client_factory = client_factory or (lambda target: BleakClient(target, timeout=connect_timeout))
         self._client: BleakClient | None = None
         self._write_lock = asyncio.Lock()
         self._available = False
@@ -48,8 +51,36 @@ class GoveeBleClient:
                 _LOGGER.debug("previous BLE client disconnect failed, ignoring")
             self._client = None
 
-        # create a fresh client and connect
-        self._client = self._client_factory(self._address)
+        ble_device = None
+        try:
+            from homeassistant.components import bluetooth
+
+            ble_device = bluetooth.async_ble_device_from_address(
+                self._hass,
+                self._address,
+                connectable=True,
+            )
+        except Exception:  # pylint: disable=broad-except
+            ble_device = None
+
+        if ble_device is not None:
+            try:
+                from bleak_retry_connector import establish_connection
+
+                self._client = await establish_connection(
+                    BleakClient,
+                    ble_device,
+                    self._address,
+                    max_attempts=self._retry_count + 1,
+                )
+                self._available = True
+                return
+            except Exception:  # pylint: disable=broad-except
+                _LOGGER.debug("bleak_retry_connector connection failed, falling back to plain BleakClient")
+
+        # Fallback to a plain BleakClient connection.
+        target = ble_device if ble_device is not None else self._address
+        self._client = self._client_factory(target)
         await asyncio.wait_for(self._client.connect(), timeout=self._connect_timeout)
         self._available = True
 

@@ -96,6 +96,7 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     options = entry.options
     ble_client = GoveeBleClient(
+        hass=hass,
         address=options.get("preferred_address", entry.data[CONF_MAC]),
         connect_timeout=options.get(CONF_CONNECT_TIMEOUT, DEFAULT_CONNECT_TIMEOUT),
         retry_count=options.get(CONF_RETRY_COUNT, DEFAULT_RETRY_COUNT),
