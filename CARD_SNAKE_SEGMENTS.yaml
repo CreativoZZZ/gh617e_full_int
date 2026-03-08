@@ -13,6 +13,13 @@ cards:
           action: javascript
           javascript: |
             [[[ 
+              const card = this.shadowRoot?.querySelector('ha-card');
+              if (card) {
+                card.classList.remove('selection-flash');
+                void card.offsetWidth;
+                card.classList.add('selection-flash');
+                setTimeout(() => card.classList.remove('selection-flash'), 320);
+              }
               const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
               const selectedEntities = allSelectionEntities.filter((entityId) => hass.states[entityId]?.state === 'on');
               hass.callService('input_boolean', 'turn_off', { entity_id: 'input_boolean.govee_h617e_multi_select_mode' });
@@ -91,6 +98,13 @@ cards:
           action: javascript
           javascript: |
             [[[ 
+              const card = this.shadowRoot?.querySelector('ha-card');
+              if (card) {
+                card.classList.remove('selection-flash');
+                void card.offsetWidth;
+                card.classList.add('selection-flash');
+                setTimeout(() => card.classList.remove('selection-flash'), 320);
+              }
               const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
               const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
               if (multiMode) {
@@ -105,11 +119,24 @@ cards:
         styles:
           card:
             - border-radius: 10px
-            - border: 1px solid #d8dde5
+            - border: 1px solid #c4cdd9
             - background: '#ffffff'
             - height: 42px
+            - transition: all 0.18s ease
+          icon:
+            - color: '#3a4758'
           name:
             - font-size: 12px
+            - color: '#2f3b4a'
+        extra_styles: |
+          @keyframes selectionFlash {
+            0% { box-shadow: 0 0 0 0 rgba(0, 184, 255, 0.0); background: #ffffff; border-color: #c4cdd9; }
+            45% { box-shadow: 0 0 0 3px rgba(0, 184, 255, 0.25); background: rgba(0, 184, 255, 0.14); border-color: #00b8ff; }
+            100% { box-shadow: 0 0 0 0 rgba(0, 184, 255, 0.0); background: #ffffff; border-color: #c4cdd9; }
+          }
+          ha-card.selection-flash {
+            animation: selectionFlash 280ms ease-out 1;
+          }
       - type: custom:button-card
         name: Auswahl umkehren
         icon: mdi:swap-horizontal-bold
@@ -117,6 +144,13 @@ cards:
           action: javascript
           javascript: |
             [[[ 
+              const card = this.shadowRoot?.querySelector('ha-card');
+              if (card) {
+                card.classList.remove('selection-flash');
+                void card.offsetWidth;
+                card.classList.add('selection-flash');
+                setTimeout(() => card.classList.remove('selection-flash'), 320);
+              }
               const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
               const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
               if (multiMode) {
@@ -133,12 +167,25 @@ cards:
         styles:
           card:
             - border-radius: 10px
-            - border: 1px solid #d8dde5
+            - border: 1px solid #c4cdd9
             - background: '#ffffff'
             - height: 42px
+            - transition: all 0.18s ease
+          icon:
+            - color: '#3a4758'
           name:
             - font-size: 12px
-
+            - color: '#2f3b4a'
+        extra_styles: |
+          @keyframes selectionFlash {
+            0% { box-shadow: 0 0 0 0 rgba(0, 184, 255, 0.0); background: #ffffff; border-color: #c4cdd9; }
+            45% { box-shadow: 0 0 0 3px rgba(0, 184, 255, 0.25); background: rgba(0, 184, 255, 0.14); border-color: #00b8ff; }
+            100% { box-shadow: 0 0 0 0 rgba(0, 184, 255, 0.0); background: #ffffff; border-color: #c4cdd9; }
+          }
+          ha-card.selection-flash {
+            animation: selectionFlash 280ms ease-out 1;
+          }
+          
   - type: custom:layout-card
     layout_type: custom:grid-layout
     layout:
@@ -155,7 +202,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_1_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_1_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -168,6 +216,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 1, grid-row: 1 }
         styles: &seg_style
@@ -200,7 +249,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_2_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_2_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -213,6 +263,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 2, grid-row: 1 }
         styles:
@@ -245,7 +296,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_3_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_3_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -258,6 +310,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 3, grid-row: 1 }
         styles:
@@ -290,7 +343,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_4_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_4_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -303,6 +357,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 4, grid-row: 1 }
         styles:
@@ -335,7 +390,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_5_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_5_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -348,6 +404,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 5, grid-row: 1 }
         styles:
@@ -381,7 +438,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_10_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_10_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -394,6 +452,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 1, grid-row: 2 }
         styles:
@@ -426,7 +485,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_9_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_9_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -439,6 +499,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 2, grid-row: 2 }
         styles:
@@ -471,7 +532,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_8_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_8_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -484,6 +546,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 3, grid-row: 2 }
         styles:
@@ -516,7 +579,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_7_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_7_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -529,6 +593,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 4, grid-row: 2 }
         styles:
@@ -561,7 +626,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_6_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_6_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -574,6 +640,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 5, grid-row: 2 }
         styles:
@@ -607,7 +674,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_11_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_11_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -620,6 +688,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 1, grid-row: 3 }
         styles:
@@ -652,7 +721,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_12_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_12_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -665,6 +735,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 2, grid-row: 3 }
         styles:
@@ -697,7 +768,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_13_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_13_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -710,6 +782,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 3, grid-row: 3 }
         styles:
@@ -742,7 +815,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_14_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_14_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -755,6 +829,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 4, grid-row: 3 }
         styles:
@@ -787,7 +862,8 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            const selectionEntity = 'input_boolean.govee_h617e_seg_15_selected';
+            [[[
+              const selectionEntity = 'input_boolean.govee_h617e_seg_15_selected';
             const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
@@ -800,6 +876,7 @@ cards:
                 hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
               }
             }
+            ]]]
         hold_action: { action: toggle }
         view_layout: { grid-column: 5, grid-row: 3 }
         styles:
