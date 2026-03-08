@@ -4,84 +4,181 @@ cards:
     entity: light.govee_h617e
     name: Relative Helligkeit (global)
 
+  - type: horizontal-stack
+    cards:
+      - type: custom:button-card
+        name: Single-Auswahl
+        icon: mdi:cursor-default-click
+        tap_action:
+          action: javascript
+          javascript: |
+            [[[ 
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const selectedEntities = allSelectionEntities.filter((entityId) => hass.states[entityId]?.state === 'on');
+              hass.callService('input_boolean', 'turn_off', { entity_id: 'input_boolean.govee_h617e_multi_select_mode' });
+              if (selectedEntities.length > 1) {
+                const keepEntity = selectedEntities[selectedEntities.length - 1];
+                hass.callService('input_boolean', 'turn_off', { entity_id: allSelectionEntities });
+                hass.callService('input_boolean', 'turn_on', { entity_id: keepEntity });
+              }
+            ]]]
+        styles:
+          card:
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+                  return multiMode ? '1px solid #d8dde5' : '2px solid #00b8ff';
+                ]]]
+            - background: >
+                [[[
+                  const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+                  return multiMode ? '#ffffff' : 'rgba(0, 184, 255, 0.14)';
+                ]]]
+            - height: 42px
+          icon:
+            - color: >
+                [[[
+                  const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+                  return multiMode ? '#5f6b7a' : '#007ea7';
+                ]]]
+          name:
+            - font-size: 12px
+            - color: >
+                [[[
+                  const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+                  return multiMode ? '#5f6b7a' : '#007ea7';
+                ]]]
+      - type: custom:button-card
+        name: Multi-Auswahl
+        icon: mdi:select-multiple
+        tap_action:
+          action: call-service
+          service: input_boolean.turn_on
+          target:
+            entity_id: input_boolean.govee_h617e_multi_select_mode
+        styles:
+          card:
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+                  return multiMode ? '2px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+                  return multiMode ? 'rgba(0, 184, 255, 0.14)' : '#ffffff';
+                ]]]
+            - height: 42px
+          icon:
+            - color: >
+                [[[
+                  const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+                  return multiMode ? '#007ea7' : '#5f6b7a';
+                ]]]
+          name:
+            - font-size: 12px
+            - color: >
+                [[[
+                  const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+                  return multiMode ? '#007ea7' : '#5f6b7a';
+                ]]]
+      - type: custom:button-card
+        name: Alle auswählen
+        icon: mdi:select-all
+        tap_action:
+          action: javascript
+          javascript: |
+            [[[ 
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+              if (multiMode) {
+                hass.callService('input_boolean', 'turn_on', { entity_id: allSelectionEntities });
+              } else {
+                const selectedEntities = allSelectionEntities.filter((entityId) => hass.states[entityId]?.state === 'on');
+                const keepEntity = selectedEntities.length ? selectedEntities[selectedEntities.length - 1] : allSelectionEntities[0];
+                hass.callService('input_boolean', 'turn_off', { entity_id: allSelectionEntities });
+                hass.callService('input_boolean', 'turn_on', { entity_id: keepEntity });
+              }
+            ]]]
+        styles:
+          card:
+            - border-radius: 10px
+            - border: 1px solid #d8dde5
+            - background: '#ffffff'
+            - height: 42px
+          name:
+            - font-size: 12px
+      - type: custom:button-card
+        name: Auswahl umkehren
+        icon: mdi:swap-horizontal-bold
+        tap_action:
+          action: javascript
+          javascript: |
+            [[[ 
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+              if (multiMode) {
+                hass.callService('homeassistant', 'toggle', { entity_id: allSelectionEntities });
+              } else {
+                const selectedEntities = allSelectionEntities.filter((entityId) => hass.states[entityId]?.state === 'on');
+                if (selectedEntities.length) {
+                  hass.callService('input_boolean', 'turn_off', { entity_id: allSelectionEntities });
+                } else {
+                  hass.callService('input_boolean', 'turn_on', { entity_id: allSelectionEntities[0] });
+                }
+              }
+            ]]]
+        styles:
+          card:
+            - border-radius: 10px
+            - border: 1px solid #d8dde5
+            - background: '#ffffff'
+            - height: 42px
+          name:
+            - font-size: 12px
+
   - type: custom:layout-card
     layout_type: custom:grid-layout
     layout:
       grid-template-columns: repeat(5, minmax(0, 1fr))
-      grid-template-rows: repeat(6, auto)
+      grid-template-rows: repeat(3, auto)
       column-gap: 8px
       row-gap: 8px
     cards:
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_1_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 1, grid-row: 1 }
-        styles: &sel_style
-          card:
-            - background: transparent
-            - box-shadow: none
-            - border: none
-            - height: 30px
-          icon:
-            - color: >
-                [[[
-                  return entity?.state === 'on' ? '#00b8ff' : '#7f8b9b';
-                ]]]
-            - width: 22px
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_2_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 2, grid-row: 1 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_3_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 3, grid-row: 1 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_4_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 4, grid-row: 1 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_5_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 5, grid-row: 1 }
-        styles: *sel_style
-
       - type: custom:button-card
         entity: light.govee_h617e_segment_1
         name: "1"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_1_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 1, grid-row: 2 }
+        view_layout: { grid-column: 1, grid-row: 1 }
         styles: &seg_style
           card:
             - height: 38px
             - border-radius: 10px
-            - border: 1px solid #d8dde5
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_1_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
             - background: >
                 [[[
                   const rgb = entity?.attributes?.rgb_color;
@@ -100,221 +197,633 @@ cards:
         name: "2"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_2_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 2, grid-row: 2 }
-        styles: *seg_style
+        view_layout: { grid-column: 2, grid-row: 1 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_2_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_3
         name: "3"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_3_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 3, grid-row: 2 }
-        styles: *seg_style
+        view_layout: { grid-column: 3, grid-row: 1 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_3_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_4
         name: "4"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_4_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 4, grid-row: 2 }
-        styles: *seg_style
+        view_layout: { grid-column: 4, grid-row: 1 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_4_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_5
         name: "5"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_5_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 5, grid-row: 2 }
-        styles: *seg_style
-
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_10_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 1, grid-row: 3 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_9_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 2, grid-row: 3 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_8_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 3, grid-row: 3 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_7_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 4, grid-row: 3 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_6_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 5, grid-row: 3 }
-        styles: *sel_style
+        view_layout: { grid-column: 5, grid-row: 1 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_5_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
 
       - type: custom:button-card
         entity: light.govee_h617e_segment_10
         name: "10"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_10_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 1, grid-row: 4 }
-        styles: *seg_style
+        view_layout: { grid-column: 1, grid-row: 2 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_10_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_9
         name: "9"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_9_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 2, grid-row: 4 }
-        styles: *seg_style
+        view_layout: { grid-column: 2, grid-row: 2 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_9_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_8
         name: "8"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_8_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 3, grid-row: 4 }
-        styles: *seg_style
+        view_layout: { grid-column: 3, grid-row: 2 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_8_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_7
         name: "7"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_7_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 4, grid-row: 4 }
-        styles: *seg_style
+        view_layout: { grid-column: 4, grid-row: 2 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_7_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_6
         name: "6"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_6_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 5, grid-row: 4 }
-        styles: *seg_style
-
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_11_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 1, grid-row: 5 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_12_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 2, grid-row: 5 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_13_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 3, grid-row: 5 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_14_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 4, grid-row: 5 }
-        styles: *sel_style
-      - type: custom:button-card
-        entity: input_boolean.govee_h617e_seg_15_selected
-        show_name: false
-        show_state: false
-        show_icon: true
-        icon: mdi:checkbox-marked-circle
-        tap_action: { action: toggle }
-        view_layout: { grid-column: 5, grid-row: 5 }
-        styles: *sel_style
+        view_layout: { grid-column: 5, grid-row: 2 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_6_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
 
       - type: custom:button-card
         entity: light.govee_h617e_segment_11
         name: "11"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_11_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 1, grid-row: 6 }
-        styles: *seg_style
+        view_layout: { grid-column: 1, grid-row: 3 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_11_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_12
         name: "12"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_12_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 2, grid-row: 6 }
-        styles: *seg_style
+        view_layout: { grid-column: 2, grid-row: 3 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_12_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_13
         name: "13"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_13_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 3, grid-row: 6 }
-        styles: *seg_style
+        view_layout: { grid-column: 3, grid-row: 3 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_13_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_14
         name: "14"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_14_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 4, grid-row: 6 }
-        styles: *seg_style
+        view_layout: { grid-column: 4, grid-row: 3 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_14_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
       - type: custom:button-card
         entity: light.govee_h617e_segment_15
         name: "15"
         show_state: false
         show_icon: false
-        tap_action: { action: more-info }
+        tap_action:
+          action: javascript
+          javascript: |
+            const selectionEntity = 'input_boolean.govee_h617e_seg_15_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
+            } else {
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
+            }
         hold_action: { action: toggle }
-        view_layout: { grid-column: 5, grid-row: 6 }
-        styles: *seg_style
+        view_layout: { grid-column: 5, grid-row: 3 }
+        styles:
+          card:
+            - height: 38px
+            - border-radius: 10px
+            - border: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_15_selected']?.state === 'on';
+                  return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - background: >
+                [[[
+                  const rgb = entity?.attributes?.rgb_color;
+                  if (entity?.state === 'on' && rgb) return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+                  return '#f0f2f6';
+                ]]]
+          name:
+            - font-size: 20px
+            - font-weight: 600
+            - color: >
+                [[[
+                  return entity?.state === 'on' ? '#ffffff' : '#b8c0cc';
+                ]]]
 
   - type: horizontal-stack
     cards:
@@ -323,15 +832,15 @@ cards:
         icon: mdi:lightbulb-on
         tap_action:
           action: call-service
-          service: script.govee_selected_on
+          service: script.govee_selected_segments_on
       - type: button
         name: Ausgewählte AUS
         icon: mdi:lightbulb-off
         tap_action:
           action: call-service
-          service: script.govee_selected_off
+          service: script.govee_selected_segments_off
       - type: button
-        entity: script.govee_selected_set_color
+        entity: script.govee_set_color_brightness_for_selected
         name: Farbe für Auswahl
         icon: mdi:palette
         tap_action:
