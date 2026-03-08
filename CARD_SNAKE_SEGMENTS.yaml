@@ -10,10 +10,16 @@ cards:
         name: Single-Auswahl
         icon: mdi:cursor-default-click
         tap_action:
-          action: call-service
-          service: input_boolean.turn_off
-          target:
-            entity_id: input_boolean.govee_h617e_multi_select_mode
+          action: javascript
+          javascript: |
+            const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+            const selectedEntities = allSelectionEntities.filter((entityId) => hass.states[entityId]?.state === 'on');
+            hass.callService('input_boolean', 'turn_off', { entity_id: 'input_boolean.govee_h617e_multi_select_mode' });
+            if (selectedEntities.length > 1) {
+              const keepEntity = selectedEntities[selectedEntities.length - 1];
+              hass.callService('input_boolean', 'turn_off', { entity_id: allSelectionEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: keepEntity });
+            }
         styles: &mode_button_style
           card:
             - border-radius: 10px
@@ -34,49 +40,37 @@ cards:
         name: Alle auswählen
         icon: mdi:select-all
         tap_action:
-          action: call-service
-          service: input_boolean.turn_on
-          target:
-            entity_id:
-              - input_boolean.govee_h617e_seg_1_selected
-              - input_boolean.govee_h617e_seg_2_selected
-              - input_boolean.govee_h617e_seg_3_selected
-              - input_boolean.govee_h617e_seg_4_selected
-              - input_boolean.govee_h617e_seg_5_selected
-              - input_boolean.govee_h617e_seg_6_selected
-              - input_boolean.govee_h617e_seg_7_selected
-              - input_boolean.govee_h617e_seg_8_selected
-              - input_boolean.govee_h617e_seg_9_selected
-              - input_boolean.govee_h617e_seg_10_selected
-              - input_boolean.govee_h617e_seg_11_selected
-              - input_boolean.govee_h617e_seg_12_selected
-              - input_boolean.govee_h617e_seg_13_selected
-              - input_boolean.govee_h617e_seg_14_selected
-              - input_boolean.govee_h617e_seg_15_selected
+          action: javascript
+          javascript: |
+            const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'turn_on', { entity_id: allSelectionEntities });
+            } else {
+              const selectedEntities = allSelectionEntities.filter((entityId) => hass.states[entityId]?.state === 'on');
+              const keepEntity = selectedEntities.length ? selectedEntities[selectedEntities.length - 1] : allSelectionEntities[0];
+              hass.callService('input_boolean', 'turn_off', { entity_id: allSelectionEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: keepEntity });
+            }
         styles: *mode_button_style
       - type: custom:button-card
         name: Auswahl umkehren
         icon: mdi:swap-horizontal-bold
         tap_action:
-          action: call-service
-          service: homeassistant.toggle
-          target:
-            entity_id:
-              - input_boolean.govee_h617e_seg_1_selected
-              - input_boolean.govee_h617e_seg_2_selected
-              - input_boolean.govee_h617e_seg_3_selected
-              - input_boolean.govee_h617e_seg_4_selected
-              - input_boolean.govee_h617e_seg_5_selected
-              - input_boolean.govee_h617e_seg_6_selected
-              - input_boolean.govee_h617e_seg_7_selected
-              - input_boolean.govee_h617e_seg_8_selected
-              - input_boolean.govee_h617e_seg_9_selected
-              - input_boolean.govee_h617e_seg_10_selected
-              - input_boolean.govee_h617e_seg_11_selected
-              - input_boolean.govee_h617e_seg_12_selected
-              - input_boolean.govee_h617e_seg_13_selected
-              - input_boolean.govee_h617e_seg_14_selected
-              - input_boolean.govee_h617e_seg_15_selected
+          action: javascript
+          javascript: |
+            const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('homeassistant', 'toggle', { entity_id: allSelectionEntities });
+            } else {
+              const selectedEntities = allSelectionEntities.filter((entityId) => hass.states[entityId]?.state === 'on');
+              if (selectedEntities.length) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: allSelectionEntities });
+              } else {
+                hass.callService('input_boolean', 'turn_on', { entity_id: allSelectionEntities[0] });
+              }
+            }
         styles: *mode_button_style
 
   - type: custom:layout-card
@@ -772,15 +766,15 @@ cards:
         icon: mdi:lightbulb-on
         tap_action:
           action: call-service
-          service: script.govee_selected_on
+          service: script.govee_selected_segments_on
       - type: button
         name: Ausgewählte AUS
         icon: mdi:lightbulb-off
         tap_action:
           action: call-service
-          service: script.govee_selected_off
+          service: script.govee_selected_segments_off
       - type: button
-        entity: script.govee_selected_set_color
+        entity: script.govee_set_color_brightness_for_selected
         name: Farbe für Auswahl
         icon: mdi:palette
         tap_action:
