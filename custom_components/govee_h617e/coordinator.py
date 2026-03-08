@@ -1,9 +1,11 @@
 """Data coordinator and state model for Govee H617E."""
 from __future__ import annotations
 
+import asyncio
 from dataclasses import dataclass, field
 from datetime import timedelta
 import logging
+import time
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -47,6 +49,8 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
         self.optimistic_mode = optimistic_mode
         self.experimental_segments = experimental_segments
         self.segment_count = max(1, min(56, segment_count))
+        self._segment_write_lock = asyncio.Lock()
+        self._last_segment_write_monotonic = 0.0
         self.state = H617EState()
 
         super().__init__(
@@ -119,6 +123,12 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
         await self.ble_client.async_write(rgb_packet(*self._scale_rgb_for_brightness(rgb)))
         self.state.rgb_color = rgb
         self.state.effect = None
+        # Keep segment entities visually in sync when global color is changed.
+        # Global color commands affect the whole strip, so mirror that state.
+        if self.experimental_segments:
+            for idx in range(self.segment_count):
+                self.state.segment_colors[idx] = rgb
+                self.state.segment_last_colors[idx] = rgb
         await self.async_request_refresh()
 
     async def async_set_effect(self, name: str, packet: bytes) -> None:
@@ -138,9 +148,17 @@ class GoveeH617ECoordinator(DataUpdateCoordinator[H617EState]):
         if rgb != (0, 0, 0):
             self.state.segment_last_colors[index] = rgb
 
-        # Experimental: this packet format is not fully validated for all H617E firmware versions.
-        await self.ble_client.async_write(
-            experimental_segment_packet(index, *self._scale_rgb_for_brightness(rgb))
-        )
+        # Segment writes are vulnerable to being dropped when commands are fired
+        # in quick succession. Serialize and add a small minimum spacing.
+        packet = experimental_segment_packet(index, *self._scale_rgb_for_brightness(rgb))
+        async with self._segment_write_lock:
+            min_gap_seconds = 0.12
+            now = time.monotonic()
+            wait_time = min_gap_seconds - (now - self._last_segment_write_monotonic)
+            if wait_time > 0:
+                await asyncio.sleep(wait_time)
+            await self.ble_client.async_write(packet)
+            self._last_segment_write_monotonic = time.monotonic()
+
         self.state.segment_colors[index] = rgb
-        await self.async_request_refresh()
+        self.async_update_listeners()

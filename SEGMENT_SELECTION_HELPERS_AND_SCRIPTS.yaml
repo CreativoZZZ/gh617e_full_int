@@ -56,6 +56,8 @@ script:
 
   govee_selected_apply_from_main:
     alias: Govee - Apply Main Color/Brightness To Selected
+    mode: queued
+    max: 20
     sequence:
       - variables:
           selected: >
@@ -67,6 +69,9 @@ script:
             {% endfor %}
             {{ ns.ids }}
           rgb: "{{ state_attr('light.govee_h617e','rgb_color') or [255,255,255] }}"
+          r: "{{ (rgb[0] if rgb is sequence and rgb is not string else 255) | int }}"
+          g: "{{ (rgb[1] if rgb is sequence and rgb is not string else 255) | int }}"
+          b: "{{ (rgb[2] if rgb is sequence and rgb is not string else 255) | int }}"
           bri: "{{ state_attr('light.govee_h617e','brightness') or 255 }}"
       - repeat:
           for_each: "{{ selected }}"
@@ -75,36 +80,23 @@ script:
               target:
                 entity_id: "{{ 'light.govee_h617e_segment_' ~ repeat.item }}"
               data:
-                rgb_color: "{{ rgb }}"
+                rgb_color:
+                  - "{{ r }}"
+                  - "{{ g }}"
+                  - "{{ b }}"
                 brightness: "{{ bri }}"
+                transition: 0
+            - delay: "00:00:00.15"
 
   govee_selected_set_color:
     alias: Govee - Set Color/Brightness For Selected
+    mode: queued
+    max: 20
     fields:
-      red:
-        name: Rot
+      color:
+        name: Farbe
         selector:
-          number:
-            min: 0
-            max: 255
-            step: 1
-            mode: slider
-      green:
-        name: Gruen
-        selector:
-          number:
-            min: 0
-            max: 255
-            step: 1
-            mode: slider
-      blue:
-        name: Blau
-        selector:
-          number:
-            min: 0
-            max: 255
-            step: 1
-            mode: slider
+          color_rgb:
       brightness:
         name: Helligkeit
         selector:
@@ -123,9 +115,30 @@ script:
               {% endif %}
             {% endfor %}
             {{ ns.ids }}
-          r: "{{ red | default(255) | int }}"
-          g: "{{ green | default(255) | int }}"
-          b: "{{ blue | default(255) | int }}"
+          r: >
+            {% if color is mapping %}
+              {{ color.red | default(color.r) | default(255) | int }}
+            {% elif color is sequence and color is not string %}
+              {{ color[0] | default(255) | int }}
+            {% else %}
+              255
+            {% endif %}
+          g: >
+            {% if color is mapping %}
+              {{ color.green | default(color.g) | default(255) | int }}
+            {% elif color is sequence and color is not string %}
+              {{ color[1] | default(255) | int }}
+            {% else %}
+              255
+            {% endif %}
+          b: >
+            {% if color is mapping %}
+              {{ color.blue | default(color.b) | default(255) | int }}
+            {% elif color is sequence and color is not string %}
+              {{ color[2] | default(255) | int }}
+            {% else %}
+              255
+            {% endif %}
           bri: "{{ brightness | default(255) | int }}"
       - repeat:
           for_each: "{{ selected }}"
@@ -139,3 +152,5 @@ script:
                   - "{{ g }}"
                   - "{{ b }}"
                 brightness: "{{ bri }}"
+                transition: 0
+            - delay: "00:00:00.15"
