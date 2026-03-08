@@ -25,7 +25,8 @@ cards:
               hass.callService('input_boolean', 'turn_off', { entity_id: 'input_boolean.govee_h617e_multi_select_mode' });
               if (selectedEntities.length > 1) {
                 const keepEntity = selectedEntities[selectedEntities.length - 1];
-                hass.callService('input_boolean', 'turn_off', { entity_id: allSelectionEntities });
+                const otherEntities = allSelectionEntities.filter((entityId) => entityId !== keepEntity);
+                hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
                 hass.callService('input_boolean', 'turn_on', { entity_id: keepEntity });
               }
             ]]]
@@ -112,7 +113,8 @@ cards:
               } else {
                 const selectedEntities = allSelectionEntities.filter((entityId) => hass.states[entityId]?.state === 'on');
                 const keepEntity = selectedEntities.length ? selectedEntities[selectedEntities.length - 1] : allSelectionEntities[0];
-                hass.callService('input_boolean', 'turn_off', { entity_id: allSelectionEntities });
+                const otherEntities = allSelectionEntities.filter((entityId) => entityId !== keepEntity);
+                hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
                 hass.callService('input_boolean', 'turn_on', { entity_id: keepEntity });
               }
             ]]]
@@ -208,13 +210,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -227,6 +226,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_1_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_1_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -255,13 +259,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -274,6 +275,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_2_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_2_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -302,13 +308,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -321,6 +324,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_3_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_3_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -349,13 +357,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -368,6 +373,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_4_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_4_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -396,13 +406,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -415,6 +422,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_5_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_5_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -444,13 +456,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -463,6 +472,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_10_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_10_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -491,13 +505,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -510,6 +521,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_9_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_9_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -538,13 +554,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -557,6 +570,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_8_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_8_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -585,13 +603,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -604,6 +619,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_7_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_7_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -632,13 +652,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -651,6 +668,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_6_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_6_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -680,13 +702,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -699,6 +718,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_11_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_11_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -727,13 +751,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -746,6 +767,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_12_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_12_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -774,13 +800,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -793,6 +816,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_13_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_13_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -821,13 +849,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -840,6 +865,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_14_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_14_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
@@ -868,13 +898,10 @@ cards:
             if (multiMode) {
               hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              const isSelected = hass.states[selectionEntity]?.state === 'on';
-              if (isSelected) {
-                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
-              } else {
-                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
-                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
-              }
+              const allSelectionEntities = ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'];
+              const otherEntities = allSelectionEntities.filter((entityId) => entityId !== selectionEntity);
+              hass.callService('input_boolean', 'turn_off', { entity_id: otherEntities });
+              hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
             }
             ]]]
         hold_action: { action: toggle }
@@ -887,6 +914,11 @@ cards:
                 [[[
                   const selected = hass.states['input_boolean.govee_h617e_seg_15_selected']?.state === 'on';
                   return selected ? '3px solid #00b8ff' : '1px solid #d8dde5';
+                ]]]
+            - box-shadow: >
+                [[[
+                  const selected = hass.states['input_boolean.govee_h617e_seg_15_selected']?.state === 'on';
+                  return selected ? '0 0 0 2px rgba(0, 184, 255, 0.35), 0 4px 12px rgba(0, 184, 255, 0.25)' : 'none';
                 ]]]
             - background: >
                 [[[
