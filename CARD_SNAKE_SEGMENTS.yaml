@@ -95,10 +95,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_1_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_1_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_1' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 1, grid-row: 1 }
@@ -132,10 +140,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_2_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_2_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_2' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 2, grid-row: 1 }
@@ -169,10 +185,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_3_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_3_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_3' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 3, grid-row: 1 }
@@ -206,10 +230,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_4_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_4_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_4' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 4, grid-row: 1 }
@@ -243,10 +275,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_5_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_5_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_5' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 5, grid-row: 1 }
@@ -281,10 +321,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_10_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_10_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_10' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 1, grid-row: 2 }
@@ -318,10 +366,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_9_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_9_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_9' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 2, grid-row: 2 }
@@ -355,10 +411,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_8_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_8_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_8' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 3, grid-row: 2 }
@@ -392,10 +456,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_7_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_7_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_7' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 4, grid-row: 2 }
@@ -429,10 +501,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_6_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_6_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_6' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 5, grid-row: 2 }
@@ -467,10 +547,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_11_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_11_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_11' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 1, grid-row: 3 }
@@ -504,10 +592,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_12_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_12_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_12' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 2, grid-row: 3 }
@@ -541,10 +637,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_13_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_13_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_13' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 3, grid-row: 3 }
@@ -578,10 +682,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_14_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_14_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_14' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 4, grid-row: 3 }
@@ -615,10 +727,18 @@ cards:
         tap_action:
           action: javascript
           javascript: |
-            if (hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on') {
-              hass.callService('input_boolean', 'toggle', { entity_id: 'input_boolean.govee_h617e_seg_15_selected' });
+            const selectionEntity = 'input_boolean.govee_h617e_seg_15_selected';
+            const multiMode = hass.states['input_boolean.govee_h617e_multi_select_mode']?.state === 'on';
+            if (multiMode) {
+              hass.callService('input_boolean', 'toggle', { entity_id: selectionEntity });
             } else {
-              this.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: 'light.govee_h617e_segment_15' } }));
+              const isSelected = hass.states[selectionEntity]?.state === 'on';
+              if (isSelected) {
+                hass.callService('input_boolean', 'turn_off', { entity_id: selectionEntity });
+              } else {
+                hass.callService('input_boolean', 'turn_off', { entity_id: ['input_boolean.govee_h617e_seg_1_selected', 'input_boolean.govee_h617e_seg_2_selected', 'input_boolean.govee_h617e_seg_3_selected', 'input_boolean.govee_h617e_seg_4_selected', 'input_boolean.govee_h617e_seg_5_selected', 'input_boolean.govee_h617e_seg_6_selected', 'input_boolean.govee_h617e_seg_7_selected', 'input_boolean.govee_h617e_seg_8_selected', 'input_boolean.govee_h617e_seg_9_selected', 'input_boolean.govee_h617e_seg_10_selected', 'input_boolean.govee_h617e_seg_11_selected', 'input_boolean.govee_h617e_seg_12_selected', 'input_boolean.govee_h617e_seg_13_selected', 'input_boolean.govee_h617e_seg_14_selected', 'input_boolean.govee_h617e_seg_15_selected'] });
+                hass.callService('input_boolean', 'turn_on', { entity_id: selectionEntity });
+              }
             }
         hold_action: { action: toggle }
         view_layout: { grid-column: 5, grid-row: 3 }
