@@ -1,4 +1,5 @@
 input_boolean:
+  govee_h617e_multi_select_mode: { name: Govee Multi Select Mode }
   govee_h617e_seg_1_selected: { name: Govee Seg 1 selected }
   govee_h617e_seg_2_selected: { name: Govee Seg 2 selected }
   govee_h617e_seg_3_selected: { name: Govee Seg 3 selected }
